@@ -12,7 +12,7 @@ VOICE_CHANNEL_ID_2 = 1376702476488671342         # Zweiter Sprachkanal (mehrere 
 
 MP3_FILENAME_1 = "alarm.mp3"                    # Erster Ton (einmal abspielen)
 MP3_FILENAME_2 = "sound.mp3"                   # Zweiter Ton (mehrfach abspielen)
-NUMBER_OF_REPEATS = 1                          # Anzahl wie oft 2. Ton abgespielt wird
+NUMBER_OF_REPEATS = 2                          # Anzahl wie oft 2. Ton abgespielt wird
 
 VOLUME_1 = 0.002                                 # Lautstärke ersten Ton (0.0 bis 2.0, 1.0 = normal)
 VOLUME_2 = 1.0                                  # Lautstärke zweiten Ton
