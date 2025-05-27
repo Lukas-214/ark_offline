@@ -4,17 +4,20 @@ import os
 DISCORD_TOKEN = os.environ["DISCORD_TOKEN"]     # Dein Bot-Token
 TRIGGER_TEXT = "triggered by"                    # Text, der den Bot auslöst
 USER_IDS_TO_NOTIFY = [730067423935594530]       # Liste der User-IDs, die per DM benachrichtigt werden sollen
-NUMBER_OF_PINGS = 2                            # Anzahl Pings & DMs pro Person
+NUMBER_OF_PINGS = 2                           # Anzahl Pings & DMs pro Person
 
 PING_CHANNEL_ID = 1376343305830531082            # Channel-ID für Pings
 VOICE_CHANNEL_ID_1 = 1293936068143612027         # Erster Sprachkanal (ein Ton)
 VOICE_CHANNEL_ID_2 = 1376702476488671342         # Zweiter Sprachkanal (mehrere Töne)
 
-MP3_FILENAME_1 = "alarm.mp3"                      # Erster Ton (einmal abspielen)
-MP3_FILENAME_2 = "sound.mp3"                      # Zweiter Ton (mehrfach abspielen)
-NUMBER_OF_REPEATS = 1                            # Anzahl wie oft 2. Ton abgespielt wird
+MP3_FILENAME_1 = "alarm.mp3"                    # Erster Ton (einmal abspielen)
+MP3_FILENAME_2 = "sound.mp3"                   # Zweiter Ton (mehrfach abspielen)
+NUMBER_OF_REPEATS = 1                          # Anzahl wie oft 2. Ton abgespielt wird
 
-# 🎛️ ===============================
+VOLUME_1 = 0.1                                  # Lautstärke ersten Ton (0.0 bis 2.0, 1.0 = normal)
+VOLUME_2 = 1.0                                  # Lautstärke zweiten Ton
+
+# 🎛️ =============================
 
 from flask import Flask
 from threading import Thread
@@ -47,10 +50,10 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 async def on_ready():
     print(f"✅ Bot ist online als {bot.user.name}")
 
-async def play_sound(voice_client, filename, repeats=1):
+async def play_sound(voice_client, filename, repeats=1, volume=1.0):
     for i in range(repeats):
-        # FFmpeg mit Option '-vn' um Video zu ignorieren, pipe=True kann auch probiert werden
-        audio_source = discord.FFmpegPCMAudio(filename, options='-vn')
+        options = f'-vn -filter:a "volume={volume}"'
+        audio_source = discord.FFmpegPCMAudio(filename, options=options)
         done = asyncio.Event()
 
         def after_playing(error):
@@ -61,7 +64,6 @@ async def play_sound(voice_client, filename, repeats=1):
         voice_client.play(audio_source, after=after_playing)
         await done.wait()
 
-    # Kurze Pause nach dem Abspielen für sauberen Abschluss
     await asyncio.sleep(1)
 
 @bot.event
@@ -107,7 +109,7 @@ async def on_message(message):
             voice_client_1 = await voice_channel_1.connect()
             print(f"🔊 Bot ist im Sprachkanal 1 ({VOICE_CHANNEL_ID_1})")
 
-            await play_sound(voice_client_1, MP3_FILENAME_1, repeats=1)
+            await play_sound(voice_client_1, MP3_FILENAME_1, repeats=1, volume=VOLUME_1)
 
             await voice_client_1.disconnect()
             print("🚪 Bot hat Sprachkanal 1 verlassen")
@@ -121,7 +123,7 @@ async def on_message(message):
             voice_client_2 = await voice_channel_2.connect()
             print(f"🔊 Bot ist im Sprachkanal 2 ({VOICE_CHANNEL_ID_2})")
 
-            await play_sound(voice_client_2, MP3_FILENAME_2, repeats=NUMBER_OF_REPEATS)
+            await play_sound(voice_client_2, MP3_FILENAME_2, repeats=NUMBER_OF_REPEATS, volume=VOLUME_2)
 
             await voice_client_2.disconnect()
             print("🚪 Bot hat Sprachkanal 2 verlassen")
@@ -130,3 +132,4 @@ async def on_message(message):
 
 keep_alive()
 bot.run(DISCORD_TOKEN)
+
