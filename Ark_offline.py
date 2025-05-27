@@ -2,8 +2,8 @@ import os
 
 # 🎛️ ======= KONFIGURATION =======
 DISCORD_TOKEN = os.environ["DISCORD_TOKEN"]     # Dein Bot-Token
-TRIGGER_TEXT = "triggert by"                    # Text, der den Bot auslöst
-USER_IDS_TO_NOTIFY = [730067423935594530]       # Liste der User-IDs, die per DM benachrichtigt werden sollen
+TRIGGER_TEXT = "triggered by"                    # Text, der den Bot auslöst
+USER_IDS_TO_NOTIFY = [730067423935594530, 886258061944172554, 1238212956202995846, 656185492374814720, 792000446318903307]       # Liste der User-IDs, die per DM benachrichtigt werden sollen
 NUMBER_OF_PINGS = 20                            # Anzahl Pings & DMs pro Person
 
 PING_CHANNEL_ID = 1376343305830531082            # Channel-ID für Pings
