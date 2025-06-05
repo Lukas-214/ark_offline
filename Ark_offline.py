@@ -13,6 +13,11 @@ NUMBER_OF_PINGS = 2                              # Anzahl Pings & DMs pro Person
 PING_CHANNEL_ID = 1376343305830531082            # Channel-ID für Pings
 # 🎛️ =============================
 
+if (user && user.id) {
+  console.log(user.id);
+} else {
+  console.log("User nicht gefunden!");
+}
 app = Flask('')
 
 @app.route('/')
